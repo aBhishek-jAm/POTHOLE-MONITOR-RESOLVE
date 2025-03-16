@@ -1,0 +1,7 @@
+.zone-reports-container {
+    padding: 20px;
+}
+#zoneChart {
+    max-width: 800px;
+    margin: 20px auto;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Road Health App</title>
+    <link rel="stylesheet" href="pstyles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        <div class="profile-section">
+            <div class="profile-picture">
+                <img id="profile-image" src="default-profile.png" alt="Profile Picture">
+                <input type="file" id="upload-photo" accept="image/*">
+            </div>
+            <div class="profile-details">
+                <p><strong>Email:</strong> <span id="user-email">user@example.com</span></p>
+                <p><strong>Phone:</strong> <span id="user-phone">+91 9876543210</span></p>
+                <p><strong>Date of Birth:</strong> <input type="date" id="user-dob" value="1990-01-01"></p>
+                <p><strong>Bio:</strong> <textarea id="user-bio" rows="3">I love reporting road issues!</textarea></p>
+                <button id="update-profile">Update Profile</button>
+            </div>
+        </div>
+        <div class="stats-section">
+            <h2>Your Stats</h2>
+            <p><strong>Total Faults Found:</strong> <span id="total-faults">10</span></p>
+            <p><strong>Verified by Officials:</strong> <span id="verified-faults">8</span></p>
+            <p><strong>Total Reward Points:</strong> <span id="total-points">120</span></p>
+            <p><strong>Today's Earnings:</strong> <span id="todays-earnings">20</span></p>
+        </div>
+    </div>
+    <script src="pscript.js"></script>
+</body>
+</html>
