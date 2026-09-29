@@ -1,11 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #f0f0f0;
 }
+
 .container {
     background: white;
     padding: 20px;
@@ -15,35 +22,109 @@ body {
     max-width: 500px;
     width: 100%;
 }
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.nav-links a {
+    margin-left: 12px;
+    color: #28a745;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
 .profile-section {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 20px;
+    text-align: left;
 }
+
 .profile-picture {
     margin-right: 20px;
+    flex-shrink: 0;
 }
+
 .profile-picture img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    border: 3px solid #28a745;
 }
+
+.profile-picture input[type="file"] {
+    margin-top: 8px;
+    font-size: 12px;
+    width: 100px;
+}
+
+.profile-details {
+    flex: 1;
+}
+
 .profile-details p {
-    margin: 10px 0;
+    margin: 8px 0;
+    color: #555;
 }
+
 .profile-details textarea {
     width: 100%;
     padding: 6px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    resize: vertical;
 }
+
+.profile-details input[type="date"] {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 .stats-section {
     margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: left;
 }
+
+.stats-section h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
 .stats-section p {
-    margin: 10px 0;
+    margin: 8px 0;
+    color: #555;
 }
+
 button {
     padding: 10px 20px;
     margin: 10px 0;
@@ -52,7 +133,9 @@ button {
     background-color: #28a745;
     color: white;
     cursor: pointer;
+    font-weight: bold;
 }
+
 button:hover {
     background-color: #218838;
 }

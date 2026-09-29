@@ -1,17 +1,89 @@
-.issue-details-container {
-    padding: 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #0d6efd;
+    color: white;
+}
+
+.nav-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.nav-links a {
+    margin-left: 16px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.detail-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
 #issue-content {
-    margin-top: 20px;
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
 }
+
+#issue-content p {
+    margin: 10px 0;
+    color: #555;
+}
+
+#issue-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.back-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
 button {
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
-    background-color: #28a745;
+    background-color: #0d6efd;
     color: white;
     cursor: pointer;
+    margin: 4px;
 }
+
 button:hover {
-    background-color: #218838;
+    background-color: #0b5ed7;
 }

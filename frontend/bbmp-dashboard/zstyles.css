@@ -1,7 +1,62 @@
-.zone-reports-container {
-    padding: 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #0d6efd;
+    color: white;
+}
+
+.nav-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.nav-links a {
+    margin-left: 16px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.zone-container {
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.chart-wrapper {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 #zoneChart {
-    max-width: 800px;
-    margin: 20px auto;
+    max-width: 100%;
 }

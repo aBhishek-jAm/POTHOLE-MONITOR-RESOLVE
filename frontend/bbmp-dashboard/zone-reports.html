@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zone Reports - Road Health App</title>
+    <title>Zone Reports - BBMP Road Health</title>
     <link rel="stylesheet" href="zstyles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Zone Reports</h1>
-        <canvas id="zoneChart"></canvas>
+    <nav class="nav-bar">
+        <span class="nav-title">🏛️ BBMP Dashboard</span>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="zone-reports.html" class="active">Zone Reports</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="zone-container">
+        <h1>Zone-wise Issue Reports</h1>
+        <div class="chart-wrapper">
+            <canvas id="zoneChart"></canvas>
+        </div>
     </div>
     <script src="zone.js"></script>
 </body>

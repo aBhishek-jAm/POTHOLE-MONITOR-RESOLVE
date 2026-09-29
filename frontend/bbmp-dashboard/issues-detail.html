@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Issue Details - Road Health App</title>
+    <title>Issue Details - BBMP Road Health</title>
     <link rel="stylesheet" href="idstyles.css">
 </head>
 <body>
-    <div class="container">
+    <nav class="nav-bar">
+        <span class="nav-title">🏛️ BBMP Dashboard</span>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="zone-reports.html">Zone Reports</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="detail-container">
         <h1>Issue Details</h1>
-        <div id="issue-content"></div>
+        <div id="issue-content">
+            <p style="color: #999;">Loading issue details...</p>
+        </div>
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
     <script src="issue.js"></script>
 </body>

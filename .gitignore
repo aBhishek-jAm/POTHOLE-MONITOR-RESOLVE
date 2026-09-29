@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+venv/
+env/
+.env
+
+# ML Model weights (too large for GitHub)
+*.pt
+*.pth
+*.onnx
+*.tflite
+
+# Database
+*.sqlite3
+*.db
+
+# Sample videos (too large for GitHub)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# IDE
+.vscode/
+.idea/
+.qodo/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

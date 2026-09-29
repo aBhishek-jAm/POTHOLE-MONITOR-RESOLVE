@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login/Signup</title>
+    <title>Login - Road Health App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Road Health App</h1>
+        <h1>🛣️ Road Health App</h1>
+
+        <!-- Login Form -->
         <form id="login-form">
             <input type="email" id="email" placeholder="Email" required>
             <input type="password" id="password" placeholder="Password" required>
@@ -16,17 +18,27 @@
         </form>
         <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
         <p><a href="#" id="forgot-password-link">Forgot Password?</a></p>
-    </div>
 
-    <!-- Forgot Password Modal -->
-    <div id="forgot-password-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Forgot Password</h2>
-            <form id="forgot-password-form">
-                <input type="email" id="forgot-email" placeholder="Enter your email" required>
-                <button type="submit">Reset Password</button>
-            </form>
+        <!-- Signup Form (hidden by default) -->
+        <form id="signup-form" style="display: none;">
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="tel" id="signup-phone" placeholder="Phone (optional)">
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p id="login-link-wrapper" style="display: none;">Already have an account? <a href="#" id="login-link">Login</a></p>
+
+        <!-- Forgot Password Modal -->
+        <div id="forgot-password-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Forgot Password</h2>
+                <form id="forgot-password-form">
+                    <input type="email" id="forgot-email" placeholder="Enter your email" required>
+                    <button type="submit">Reset Password</button>
+                </form>
+            </div>
         </div>
     </div>
 

@@ -6,24 +6,36 @@ const detectionResults = document.getElementById("detection-results");
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false;
-let pointsEarned = 0; // Track points earned
+let pointsEarned = 0;
+
+// Check if user is logged in
+const user = JSON.parse(localStorage.getItem("user"));
+if (!user) {
+    alert("Please login first.");
+    window.location.href = "index.html";
+}
+
+// Handle logout
+document.getElementById("logout-btn").addEventListener("click", function (e) {
+    e.preventDefault();
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+});
 
 // Roboflow API configuration
+// NOTE: In production, move the API key to a backend proxy to avoid exposing it
 const roboflowConfig = {
     apiUrl: "https://detect.roboflow.com",
-    apiKey: "qZzpZz6ybap4lO7ZmEw4", // Replace with your API key
-    modelId: "water-pothole-detection/1", // Use only one model
+    apiKey: "YOUR_API_KEY_HERE", // Replace with your Roboflow API key
+    modelId: "water-pothole-detection/1",
 };
 
-// Function to run inference using Roboflow API
+// Run inference using Roboflow API
 async function runInference(imageData) {
     const apiUrl = `${roboflowConfig.apiUrl}/${roboflowConfig.modelId}?api_key=${roboflowConfig.apiKey}`;
 
     try {
-        // Convert base64 image data to a Blob
         const blob = await fetch(`data:image/jpeg;base64,${imageData}`).then(res => res.blob());
-
-        // Create a FormData object and append the image
         const formData = new FormData();
         formData.append("file", blob, "frame.jpg");
 
@@ -36,16 +48,15 @@ async function runInference(imageData) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const result = await response.json();
-        return result;
+        return await response.json();
     } catch (error) {
         console.error("Error running inference:", error);
-        return { predictions: [] }; // Return empty predictions if inference fails
+        return { predictions: [] };
     }
 }
 
 // Access the camera and start video stream
-navigator.mediaDevices.getUserMedia({ video: true })
+navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
     .then(stream => {
         video.srcObject = stream;
         mediaRecorder = new MediaRecorder(stream);
@@ -57,117 +68,124 @@ navigator.mediaDevices.getUserMedia({ video: true })
         };
 
         mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, { type: "video/mp4" });
+            const blob = new Blob(recordedChunks, { type: "video/webm" });
             const url = URL.createObjectURL(blob);
-            detectionResults.innerHTML = `<p>Video recorded! <a href="${url}" download="road-issue.mp4">Download</a></p>`;
+            detectionResults.innerHTML += `<p>Video recorded! <a href="${url}" download="road-issue.webm">Download</a></p>`;
             recordedChunks = [];
         };
     })
     .catch(error => {
         console.error("Error accessing camera:", error);
-        alert("Failed to access camera. Please allow camera permissions.");
+        detectionResults.innerHTML = `<p class="error">Failed to access camera. Please allow camera permissions and refresh the page.</p>`;
     });
 
 // Start recording
 startRecord.addEventListener("click", () => {
+    if (!mediaRecorder) {
+        alert("Camera not ready. Please allow camera permissions and refresh.");
+        return;
+    }
     mediaRecorder.start();
     startRecord.disabled = true;
     stopRecord.disabled = false;
     isRecording = true;
+    pointsEarned = 0;
+    detectionResults.innerHTML = "<p>Recording... detecting road issues...</p>";
     processFrames();
 });
 
 // Stop recording
 stopRecord.addEventListener("click", () => {
-    if (pointsEarned >= 50) {
-        mediaRecorder.stop();
-        startRecord.disabled = false;
-        stopRecord.disabled = true;
-        isRecording = false;
-    } else {
-        alert("You need to earn 50 points before stopping the recording.");
-    }
+    mediaRecorder.stop();
+    startRecord.disabled = false;
+    stopRecord.disabled = true;
+    isRecording = false;
+    detectionResults.innerHTML += `<p>Recording stopped. Total points earned this session: ${pointsEarned}</p>`;
 });
 
-// Function to draw bounding boxes on the video stream
+// Draw bounding boxes on canvas overlay
 function drawBoundingBoxes(canvas, predictions) {
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     predictions.forEach(prediction => {
         const { x, y, width, height } = prediction;
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x, y, width, height);
+        ctx.strokeStyle = "#ff4444";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x - width / 2, y - height / 2, width, height);
 
-        // Add label
-        ctx.fillStyle = "red";
-        ctx.font = "14px Arial";
-        ctx.fillText("Pothole", x, y - 5);
+        ctx.fillStyle = "#ff4444";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText(`${prediction.class} (${(prediction.confidence * 100).toFixed(0)}%)`, x - width / 2, y - height / 2 - 8);
     });
 }
 
-// Function to process frames in real-time
+// Get user's current geolocation
+function getLocation() {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                }),
+                () => resolve({ latitude: 12.9716, longitude: 77.5946 }) // Fallback to Bangalore center
+            );
+        } else {
+            resolve({ latitude: 12.9716, longitude: 77.5946 });
+        }
+    });
+}
+
+// Process video frames for detection
 async function processFrames() {
     const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
     const ctx = canvas.getContext("2d");
 
-    while (isRecording && pointsEarned < 50) {
+    while (isRecording) {
         try {
-            // Capture frame from video
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = generateRandomHash(); // Use random hash instead of actual image data
+            const imageData = canvas.toDataURL("image/jpeg", 0.7).split(",")[1]; // Base64 encoded
 
-            // Fixed geolocation
-            const location = { latitude: 13.073706, longitude: 77.499817 };
-            const timestamp = new Date().toLocaleString();
+            const location = await getLocation();
+            const timestamp = new Date().toISOString();
 
-            // Run inference on the model
             const inferenceResult = await runInference(imageData);
 
-            // Draw bounding boxes on the canvas
-            if (inferenceResult.predictions.length > 0) {
+            if (inferenceResult.predictions && inferenceResult.predictions.length > 0) {
                 drawBoundingBoxes(canvas, inferenceResult.predictions);
-            }
 
-            // Check for detected faults
-            if (inferenceResult.predictions.length > 0) {
-                // Determine the issue type (only pothole in this case)
-                const issueType = "pothole";
+                const issueType = inferenceResult.predictions[0].class || "pothole";
 
-                // Send data to BBMP dashboard
                 const result = await sendToBBMPDashboard({
                     type: issueType,
                     location: `${location.latitude},${location.longitude}`,
-                    user_id: 1, // Replace with the actual user ID
+                    user_id: user.user_id,
                     timestamp: timestamp,
-                    image_data: imageData,
+                    image_data: imageData.substring(0, 200), // Truncated for storage
                 });
 
-                // Update points earned
-                pointsEarned += result.points;
-                console.log(`Points earned: ${pointsEarned}`);
+                if (result.points) {
+                    pointsEarned += result.points;
+                    detectionResults.innerHTML = `
+                        <p>🔍 Detected: <strong>${issueType}</strong></p>
+                        <p>📍 Location: ${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}</p>
+                        <p>⭐ Points this session: ${pointsEarned}</p>
+                    `;
+                }
             }
         } catch (error) {
             console.error("Error processing frame:", error);
         }
 
-        // Wait for the next frame
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Process every 1 second
-    }
-
-    if (pointsEarned >= 50) {
-        alert("Congratulations! You have earned 50 points.");
-        mediaRecorder.stop();
-        startRecord.disabled = false;
-        stopRecord.disabled = true;
-        isRecording = false;
+        // Process every 2 seconds to avoid rate limiting
+        await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 }
 
-// Function to send data to BBMP dashboard
+// Send detected issue to backend
 async function sendToBBMPDashboard(data) {
     try {
         const response = await fetch("http://127.0.0.1:5000/api/report-issue", {
@@ -178,22 +196,10 @@ async function sendToBBMPDashboard(data) {
             body: JSON.stringify(data),
         });
         const result = await response.json();
-        console.log("Data sent to BBMP dashboard:", result);
+        console.log("Issue reported:", result);
         return result;
     } catch (error) {
-        console.error("Error sending data to BBMP dashboard:", error);
-        throw error;
+        console.error("Error sending data to backend:", error);
+        return { points: 0 };
     }
-}
-
-// Function to generate a random hash
-function generateRandomHash() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
-
-// Function to get the user's location (not used in this version)
-function getLocation() {
-    return new Promise((resolve, reject) => {
-        resolve({ latitude: 13.073706, longitude: 77.499817 });
-    });
 }

@@ -4,7 +4,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/login", {
+        const response = await fetch("http://127.0.0.1:5000/api/admin-login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -13,17 +13,20 @@ document.getElementById("login-form").addEventListener("submit", async function 
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const err = await response.json();
+            alert(err.message || "Login failed!");
+            return;
         }
 
         const result = await response.json();
         if (result.message === "Login successful!") {
+            localStorage.setItem("admin", JSON.stringify(result));
             window.location.href = "dashboard.html";
         } else {
             alert("Invalid username or password!");
         }
     } catch (error) {
         console.error("Error during login:", error);
-        alert("Failed to login. Please try again.");
+        alert("Failed to login. Please check that the backend server is running.");
     }
 });

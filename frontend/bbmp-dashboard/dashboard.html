@@ -3,22 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Road Health App</title>
+    <title>Dashboard - BBMP Road Health</title>
     <link rel="stylesheet" href="dstyles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Dashboard</h1>
-        <div id="map" style="height: 400px;"></div>
+    <nav class="nav-bar">
+        <span class="nav-title">🏛️ BBMP Dashboard</span>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="zone-reports.html">Zone Reports</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Stats Cards -->
+        <div class="stats-row" id="stats-row">
+            <div class="stat-card">
+                <h3>Total Issues</h3>
+                <span id="stat-total">0</span>
+            </div>
+            <div class="stat-card">
+                <h3>Reported</h3>
+                <span id="stat-reported">0</span>
+            </div>
+            <div class="stat-card">
+                <h3>In Progress</h3>
+                <span id="stat-progress">0</span>
+            </div>
+            <div class="stat-card">
+                <h3>Resolved</h3>
+                <span id="stat-resolved">0</span>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <h2>Issue Locations</h2>
+        <div id="map"></div>
+
+        <!-- Issues Table -->
+        <h2>All Reported Issues</h2>
         <table id="issues-table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Type</th>
+                    <th>Zone</th>
                     <th>Location</th>
                     <th>Status</th>
                     <th>Timestamp</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
