@@ -1,3 +1,7 @@
+// ----- API Base URL -----
+// Uses the current origin so the app works regardless of hostname/port
+const API_BASE = window.location.origin;
+
 // ----- Login -----
 document.getElementById("login-form").addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -5,7 +9,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/login", {
+        const response = await fetch(`${API_BASE}/api/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -44,7 +48,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
     }
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/signup", {
+        const response = await fetch(`${API_BASE}/api/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, phone, password }),
@@ -116,7 +120,7 @@ document.getElementById("forgot-password-form").addEventListener("submit", async
     const email = document.getElementById("forgot-email").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/forgot-password", {
+        const response = await fetch(`${API_BASE}/api/forgot-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),

@@ -1,3 +1,6 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 // Check login
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
@@ -7,7 +10,7 @@ if (!user) {
 // Fetch user data from the backend
 async function fetchUserData() {
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/user-profile?user_id=${user.user_id}`, {
+        const response = await fetch(`${API_BASE}/api/user-profile?user_id=${user.user_id}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         });
@@ -51,7 +54,7 @@ async function updateProfile() {
     const profileImage = document.getElementById("profile-image").src;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/update-profile", {
+        const response = await fetch(`${API_BASE}/api/update-profile`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

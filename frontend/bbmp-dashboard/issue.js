@@ -1,3 +1,6 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 // Check admin login
 const admin = JSON.parse(localStorage.getItem("admin"));
 if (!admin) {
@@ -20,7 +23,7 @@ async function fetchIssueDetails() {
             return;
         }
 
-        const response = await fetch(`http://127.0.0.1:5000/api/get-issue?id=${issueId}`);
+        const response = await fetch(`${API_BASE}/api/get-issue?id=${issueId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -51,7 +54,7 @@ async function fetchIssueDetails() {
 // Update issue status
 async function updateStatus(issueId, newStatus) {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/update-issue-status", {
+        const response = await fetch(`${API_BASE}/api/update-issue-status`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ issue_id: issueId, status: newStatus }),

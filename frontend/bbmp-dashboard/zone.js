@@ -1,3 +1,6 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 // Check admin login
 const admin = JSON.parse(localStorage.getItem("admin"));
 if (!admin) {
@@ -14,7 +17,7 @@ document.getElementById("logout-btn").addEventListener("click", function (e) {
 // Fetch zone-wise reports from the backend
 async function fetchZoneReports() {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/zone-reports");
+        const response = await fetch(`${API_BASE}/api/zone-reports`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }

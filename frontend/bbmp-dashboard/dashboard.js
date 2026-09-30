@@ -1,3 +1,6 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 // Check admin login
 const admin = JSON.parse(localStorage.getItem("admin"));
 if (!admin) {
@@ -21,7 +24,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Fetch dashboard stats
 async function fetchStats() {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/dashboard-stats");
+        const response = await fetch(`${API_BASE}/api/dashboard-stats`);
         if (!response.ok) return;
         const stats = await response.json();
 
@@ -37,7 +40,7 @@ async function fetchStats() {
 // Fetch and display issues
 async function fetchIssues() {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/get-issues");
+        const response = await fetch(`${API_BASE}/api/get-issues`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -102,7 +105,7 @@ async function fetchIssues() {
 // Update issue status
 async function updateStatus(issueId, newStatus) {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/update-issue-status", {
+        const response = await fetch(`${API_BASE}/api/update-issue-status`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ issue_id: issueId, status: newStatus }),

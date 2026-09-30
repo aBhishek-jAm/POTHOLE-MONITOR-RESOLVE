@@ -1,3 +1,6 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 const video = document.getElementById("video");
 const startRecord = document.getElementById("start-record");
 const stopRecord = document.getElementById("stop-record");
@@ -188,7 +191,7 @@ async function processFrames() {
 // Send detected issue to backend
 async function sendToBBMPDashboard(data) {
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/report-issue", {
+        const response = await fetch(`${API_BASE}/api/report-issue`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

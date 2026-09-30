@@ -1,10 +1,13 @@
+// ----- API Base URL -----
+const API_BASE = window.location.origin;
+
 document.getElementById("login-form").addEventListener("submit", async function (e) {
     e.preventDefault();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/admin-login", {
+        const response = await fetch(`${API_BASE}/api/admin-login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

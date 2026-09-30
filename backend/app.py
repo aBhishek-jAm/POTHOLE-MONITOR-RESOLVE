@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, redirect
 import sqlite3
 from datetime import datetime
 import os
@@ -6,15 +6,19 @@ from flask_cors import CORS
 import logging
 import hashlib
 
+# ----- Path Setup -----
+# Resolve paths relative to the project root (one level up from backend/)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DATABASE_DIR = os.path.join(BASE_DIR, "database")
+DATABASE = os.path.join(DATABASE_DIR, "db.sqlite3")
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
 app = Flask(__name__)
 CORS(app)
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-# Database setup
-DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "database", "db.sqlite3")
 
 
 def get_db():
@@ -25,6 +29,9 @@ def get_db():
 
 def init_db():
     """Initialize the database with required tables and seed data."""
+    # Ensure the database directory exists (important for fresh clones)
+    os.makedirs(DATABASE_DIR, exist_ok=True)
+
     with app.app_context():
         db = get_db()
 
@@ -129,6 +136,47 @@ def extract_zone_from_location(location_str):
             return "South-West Zone"
         else:
             return "South-East Zone"
+
+
+# =============================================
+# Frontend Serving Routes
+# =============================================
+# Flask serves both frontend apps so users only need to start the backend.
+# No separate web server or file:// protocol needed.
+#
+# User App:  served at /  (root)
+# Admin App: served at /admin/
+
+@app.route("/")
+def serve_user_app_root():
+    """Serve the user app login page at the root URL."""
+    return send_from_directory(os.path.join(FRONTEND_DIR, "user-app"), "index.html")
+
+
+@app.route("/admin")
+@app.route("/admin/")
+def serve_admin_root():
+    """Serve the BBMP admin dashboard login."""
+    return send_from_directory(os.path.join(FRONTEND_DIR, "bbmp-dashboard"), "index.html")
+
+
+@app.route("/admin/<path:filename>")
+def serve_admin_files(filename):
+    """Serve admin dashboard static files (CSS, JS, HTML)."""
+    return send_from_directory(os.path.join(FRONTEND_DIR, "bbmp-dashboard"), filename)
+
+
+@app.route("/<path:filename>")
+def serve_user_app_files(filename):
+    """Serve user app static files (CSS, JS, images, HTML pages).
+
+    This catch-all route handles all user-app assets. It must be
+    defined AFTER more specific routes (/, /admin, /api) so it
+    only catches what's left — i.e. user-app files like styles.css,
+    script.js, home.html, profile.html, etc.
+    """
+    return send_from_directory(os.path.join(FRONTEND_DIR, "user-app"), filename)
+
 
 
 # ----- Auth Endpoints -----
